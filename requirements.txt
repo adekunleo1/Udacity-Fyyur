@@ -1,6 +1,9 @@
-babel==2.9.0
-python-dateutil==2.6.0
-flask-moment==0.11.0
-flask-wtf==0.14.3
-flask_sqlalchemy==2.4.4
-postgres
+babel==2.10.3
+python-dateutil==2.8.2
+flask-moment==1.0.2
+flask-wtf==1.0.1
+flask_sqlalchemy==2.5.1
+Jinja2==3.1.2
+MarkupSafe==2.1.1
+Flask==2.1.2
+Werkzeug==2.1.2
