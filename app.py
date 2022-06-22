@@ -2,64 +2,30 @@
 # Imports
 #----------------------------------------------------------------------------#
 
+import datetime
+from enum import unique
 import json
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for
-from flask_moment import Moment
-from flask_sqlalchemy import SQLAlchemy
+from flask import render_template, request, Response, flash, redirect, url_for, abort, jsonify
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
+import os
+from models import Show, Venue, Artist, app, db
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
 
-app = Flask(__name__)
-moment = Moment(app)
-app.config.from_object('config')
-db = SQLAlchemy(app)
 
 # TODO: connect to a local postgresql database
-
-#----------------------------------------------------------------------------#
-# Models.
-#----------------------------------------------------------------------------#
-
-class Venue(db.Model):
-    __tablename__ = 'Venue'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
-
-class Artist(db.Model):
-    __tablename__ = 'Artist'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
-
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
+ 
 
 #----------------------------------------------------------------------------#
 # Filters.
 #----------------------------------------------------------------------------#
+
 
 def format_datetime(value, format='medium'):
   date = dateutil.parser.parse(value)
@@ -69,49 +35,79 @@ def format_datetime(value, format='medium'):
       format="EE MM, dd, y h:mma"
   return babel.dates.format_datetime(date, format, locale='en')
 
+
 app.jinja_env.filters['datetime'] = format_datetime
 
 #----------------------------------------------------------------------------#
 # Controllers.
 #----------------------------------------------------------------------------#
 
+
 @app.route('/')
 def index():
+    try:
+        try:
+            recently_listed_artists = db.session.query(Artist).order_by(
+                Artist.id.desc()).limit(12).all()
+        except:
+            flash(f"Error fetching recently listed artists!!")
+
+        try:
+            recently_listed_venues = db.session.query(Venue).order_by(
+                Venue.id.desc()).limit(12).all()
+        except:
+            flash(f"Error fetching recently listed artists!!")
+
+        artists = []
+        venues = []
+
+        for artist in recently_listed_artists:
+            info = []
+            info['id'] = artist.id
+            info['name'] = artist.name
+            artists.append(info)
+        
+        for venue in recently_listed_venues:
+            info = []
+            info['id'] = venue.id
+            info['name'] = venue.name
+            venues.append(info)
+
   return render_template('pages/home.html')
 
 
 #  Venues
 #  ----------------------------------------------------------------
 
-@app.route('/venues')
-def venues():
-  # TODO: replace with real venues data.
-  #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
-  data=[{
-    "city": "San Francisco",
-    "state": "CA",
-    "venues": [{
-      "id": 1,
-      "name": "The Musical Hop",
-      "num_upcoming_shows": 0,
+  @app.route('/venues')
+  def venues():
+    # TODO: replace with real venues data.
+    #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
+    data=[{
+      "city": "San Francisco",
+      "state": "CA",
+      "venues": [{
+        "id": 1,
+        "name": "The Musical Hop",
+        "num_upcoming_shows": 0,
+      }, {
+        "id": 3,
+        "name": "Park Square Live Music & Coffee",
+        "num_upcoming_shows": 1,
+      }]
     }, {
-      "id": 3,
-      "name": "Park Square Live Music & Coffee",
-      "num_upcoming_shows": 1,
+      "city": "New York",
+      "state": "NY",
+      "venues": [{
+        "id": 2,
+        "name": "The Dueling Pianos Bar",
+        "num_upcoming_shows": 0,
+      }]
     }]
-  }, {
-    "city": "New York",
-    "state": "NY",
-    "venues": [{
-      "id": 2,
-      "name": "The Dueling Pianos Bar",
-      "num_upcoming_shows": 0,
-    }]
-  }]
-  return render_template('pages/venues.html', areas=data);
+    return render_template('pages/venues.html', areas=data);
 
-@app.route('/venues/search', methods=['POST'])
-def search_venues():
+  @app.route('/venues/search', methods=['POST'])
+  def search_venues():
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
@@ -510,12 +506,10 @@ if not app.debug:
 #----------------------------------------------------------------------------#
 
 # Default port:
-if __name__ == '__main__':
-    app.run()
+# if __name__ == '__main__':
+#    app.run()
 
 # Or specify port manually:
-'''
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-'''
