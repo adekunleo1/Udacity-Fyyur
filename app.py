@@ -5,6 +5,7 @@
 import datetime
 from enum import unique
 import json
+from time import strftime
 import dateutil.parser
 import babel
 from flask import render_template, request, Response, flash, redirect, url_for, abort, jsonify
@@ -73,8 +74,15 @@ def index():
             info['name'] = venue.name
             venues.append(info)
 
-  return render_template('pages/home.html')
-
+        data = {
+            "artists": artists,
+            "Venues": venues
+        }
+    except:
+        flash(f"sorry, could not fetch recently listed data!!",
+              category="error")
+        abort(500)
+  return render_template('pages/home.html', data=data)
 
 #  Venues
 #  ----------------------------------------------------------------
@@ -82,7 +90,40 @@ def index():
   @app.route('/venues')
   def venues():
     # TODO: replace with real venues data.
-    #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
+    try:
+        location = Venue.query.distinct(Venue.city, Venue.state).all()
+        data = []
+        for venue in locations:
+            object = {}
+            object['city'] = venue.city
+            object['state'] = venue.state
+
+            venues = []
+
+            venue_data = Venue.query.filter(
+                Venue.state == venue.state, Venue.city == venue.city).all()
+            
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+            for this_venue in venue_data:
+                current_venue = {}
+                current_venue['id'] = this_venue.id
+                current_venue['name'] = this_venue.name
+                current_venue['num_upcomin_shows'] = Show.query.filter(
+                    db.and_(Show.start_time > current_time, Show.venue_id == this_venue.id)).count()
+                venues.append(current_venue)
+            object['venues'] = venues
+            data.append(object)
+    except:
+        flash(
+            f"Sorry, we are unable to display the venues page, due to an issue on our end.", category="error")
+        abort(500)
+    finally:
+        return render_template('names/venues_html' areas=date)
+
+
+  def get_venue_result(search_term):
+      try:
+        
     data=[{
       "city": "San Francisco",
       "state": "CA",
