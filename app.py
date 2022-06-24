@@ -13,7 +13,7 @@ from unicodedata import name
 from webbrowser import get
 import dateutil.parser
 import babel
-from flask import render_template, request, Response, flash, redirect, request_finished, url_for, abort, jsonify
+from flask import render_template, request, Response, flash, redirect, url_for, abort, jsonify
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
