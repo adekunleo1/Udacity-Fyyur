@@ -1,4 +1,4 @@
-from models import DB_NAME, DB_USER, DB_PASSWORD
+from settings import DB_NAME, DB_USER, DB_PASSWORD
 import os
 SECRET_KEY = os.urandom(32)
 # Grabs the folder where the script runs.
