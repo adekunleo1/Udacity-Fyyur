@@ -1,4 +1,4 @@
-from settings import db_user, db_password, db_name
+from dbm.dumb import _Database
 import os
 SECRET_KEY = os.urandom(32)
 # Grabs the folder where the script runs.
@@ -11,6 +11,6 @@ DEBUG = True
 
 
 # TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URL = f'postgresql://{Udacity-FYYUR}:{password}@127.0.0.1:5000/{postgres}'
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:abcdef@127.0.0.1:5000/udacityfyyurdb'
 
 SQLALCHEMY_TRACK_MODIFICATIONS = "False"
