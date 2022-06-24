@@ -1,20 +1,29 @@
 {
   "name": "cd0046-sql-and-data-modeling-for-the-web",
   "version": "1.0.0",
-  "description": "Fyyur -----",
+  "description": "Fyyur is an artist and show booking website with musical venues.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "python app.py",
+    "test": "echo 'No test specified'"
   },
+  "keywords": [
+    "Fyyur",
+    "Project",
+    "FSND",
+    "Nano-Degree"
+  ],
+  "author": "Adekunle Ogunleye",
+  "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adekunleo1/Udacity-FYYUR.git"
+    "url": "git://https://github.com/adekunleo1/Udacity-FYYUR.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/adekunleo1/Udacity-FYYUR/issues"
   },
-  "homepage": "https://github.com/adekunleo1/Udacity-FYYUR#readme"
+  "homepage": "https://github.com/adekunleo1/Udacity-FYYUR#readme",
+  "dependencies": {
+    "bootstrap": "^3.4.1"
+  }
 }

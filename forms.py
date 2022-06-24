@@ -88,7 +88,7 @@ class VenueForm(Form):
         'phone', validators=[DataRequired(), Regexp("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$", message="The Phone number is not accepted")]
     )
     image_link = StringField(
-        'image_link' validators=[DataRequired(), URL()]
+        'image_link', validators=[DataRequired()]
     )
     genres = SelectMultipleField(
         # TODO implement enum restriction
@@ -200,7 +200,7 @@ class ArtistForm(Form):
         'phone', validators=[DataRequired(), Regexp("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$", message="The Phone number is not accepted")]
     )
     image_link = StringField(
-        'image_link' validators=[DataRequired(), URL()]
+        'image_link', validators=[DataRequired(), URL()]
     )
     genres = SelectMultipleField(
         'genres', validators=[DataRequired()],
