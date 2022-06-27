@@ -51,43 +51,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def index():
-    try:
-        try:
-            recently_listed_artists = db.session.query(Artist).order_by(
-                Artist.id.desc()).limit(10).all()
-        except:
-            flash(f"Error fetching recently listed artists!")
-
-        try:
-            recently_listed_venues = db.session.query(Venue).order_by(
-                Venue.id.desc()).limit(10).all()
-        except:
-            flash(f"Error fetching recently listed venues!")
-
-        artists = []
-        venues = []
-
-        for artist in recently_listed_artists:
-            info = {}
-            info['id'] = artist.id
-            info['name'] = artist.name
-            artists.append(info)
-
-        for venue in recently_listed_venues:
-            info = {}
-            info['id'] = venue.id
-            info['name'] = venue.name
-            venues.append(info)
-
-        data = {
-            "artists": artists,
-            "venues": venues
-        }
-    except:
-        flash(f"Sorry, could not fetch recently listed data!",
-              category="error")
-        abort(500)
-    return render_template('pages/home.html', data=data)
+    return render_template('pages/home.html')
 
 
 #  Venues
@@ -712,4 +676,3 @@ if not app.debug:
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-    
